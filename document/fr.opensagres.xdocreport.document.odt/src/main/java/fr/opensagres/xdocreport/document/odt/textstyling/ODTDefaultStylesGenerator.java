@@ -29,6 +29,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.opensagres.xdocreport.document.textstyling.properties.Color;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties.ContainerType;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
@@ -404,6 +405,8 @@ public class ODTDefaultStylesGenerator
     //@Override
     public String getTextStyleName( ContainerProperties properties )
     {
+
+
         if ( properties == null )
         {
             return EMPTY_TEXT_STYLE_NAME;
@@ -412,6 +415,17 @@ public class ODTDefaultStylesGenerator
 
         // <style:text-properties
         setPropertiesKind( ODTStyleProperties.TEXT );
+
+        if(properties.getColor() != null)
+        {
+            Color color = properties.getColor();
+            java.awt.Color awtColor = new java.awt.Color(color.getRed(), color.getGreen(),color.getBlue());
+            String hex = "#"+Integer.toHexString(awtColor.getRGB()).substring(2);
+
+            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            dynamicStyles.append( "fo:color=\""+hex+"\"");
+        }
+
         if ( properties.isBold() )
         {
             startStyleIfNeeded(properties.getType(), properties.getStyleName());
